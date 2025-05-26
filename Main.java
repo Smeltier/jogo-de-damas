@@ -10,7 +10,7 @@ public class Main {
         String jogadorAtual = "B";
 
         while (damas.verificarEstadoJogo() == -1) {
-            System.out.println("Vez do jogador " + (jogadorAtual.equals("B") ? "Branco" : "Preto") + ":");
+            System.out.println("Vez do jogador " + (jogadorAtual.equals("B") ? "Vermelho" : "Azul") + ":\n");
             damas.mostrarTabuleiro();
 
             int posicaoAtualX, posicaoAtualY, novaPosicaoX, novaPosicaoY;
@@ -38,9 +38,9 @@ public class Main {
 
         System.out.println("Fim de jogo!");
         if (damas.verificarEstadoJogo() == 0)
-            System.out.println("Jogador Preto venceu!");
+            System.out.println("Jogador Azul venceu!");
         else if (damas.verificarEstadoJogo() == 1)
-            System.out.println("Jogador Branco venceu!");
+            System.out.println("Jogador Vermelho venceu!");
 
         scanner.close();
     }
