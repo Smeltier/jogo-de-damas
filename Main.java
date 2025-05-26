@@ -1,23 +1,47 @@
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.print("     ");
+        Jogo.limparTerminal();
 
-        for(int i = 0; i < 8; i++){
-            if(i+1 < 10)
-                System.out.print((i+1) + "  ");
-            else 
-                System.out.print((i+1) + " ");
+        Jogo damas = new Jogo();
+        Scanner scanner = new Scanner(System.in);
+
+        String jogadorAtual = "B";
+
+        while (damas.verificarEstadoJogo() == -1) {
+            System.out.println("Vez do jogador " + (jogadorAtual.equals("B") ? "Branco" : "Preto") + ":");
+            damas.mostrarTabuleiro();
+
+            int posicaoAtualX, posicaoAtualY, novaPosicaoX, novaPosicaoY;
+
+            while (true) {
+                System.out.println("Digite: linhaAtual colunaAtual novaLinha novaColuna");
+                posicaoAtualX = scanner.nextInt();
+                posicaoAtualY = scanner.nextInt();
+                novaPosicaoX = scanner.nextInt();
+                novaPosicaoY = scanner.nextInt();
+
+                if (damas.jogadaValida(posicaoAtualX, posicaoAtualY, novaPosicaoX, novaPosicaoY, jogadorAtual)) {
+                    break;
+                } else {
+                    System.out.println("Jogada inválida. Tente novamente.");
+                }
+            }
+
+            damas.mover(posicaoAtualX, posicaoAtualY, novaPosicaoX, novaPosicaoY, jogadorAtual);
+
+            jogadorAtual = jogadorAtual.equals("B") ? "P" : "B";
+
+            Jogo.limparTerminal();
         }
-        System.out.print("\n   \u250C");
-        
-        for(int i = 0; i < 8; i++){
-            System.out.print("\u2500\u2500\u2500");
-        }
-        System.out.println("\u2510");
-        System.out.print("   \u2514");
-        for(int i = 0; i < 8; i++){
-            System.out.print("\u2500\u2500\u2500");
-        }
-        System.out.println("\u2518");
+
+        System.out.println("Fim de jogo!");
+        if (damas.verificarEstadoJogo() == 0)
+            System.out.println("Jogador Preto venceu!");
+        else if (damas.verificarEstadoJogo() == 1)
+            System.out.println("Jogador Branco venceu!");
+
+        scanner.close();
     }
 }
