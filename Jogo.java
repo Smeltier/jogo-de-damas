@@ -1,89 +1,31 @@
 public class Jogo {
 
-    private final int tamanhoLadoTabuleiro = 8;
-    private int[][] tabuleiro;
-    private boolean[][] espacoJogada;
+    private Tabuleiro tabuleiro;
     private int comidasBrancas, comidasPretas;
 
     public Jogo() {
-        tabuleiro = new int[tamanhoLadoTabuleiro][tamanhoLadoTabuleiro];
-        espacoJogada = new boolean[tamanhoLadoTabuleiro][tamanhoLadoTabuleiro];
+        tabuleiro = new Tabuleiro();
         comidasBrancas = comidasPretas = 0;
-        ajustarEspaco();
-        ajustarTabuleiro();
-    }
-
-    private void ajustarEspaco() {
-        for (int i = 0; i < tamanhoLadoTabuleiro; i++) {
-            for (int j = 0; j < tamanhoLadoTabuleiro; j++) {
-                espacoJogada[i][j] = (i + j) % 2 != 0;
-            }
-        }
-    }
-
-    private void ajustarTabuleiro() {
-        for (int i = 0; i < tamanhoLadoTabuleiro; i++) {
-            for (int j = 0; j < tamanhoLadoTabuleiro; j++) {
-                if (i <= 1 && espacoJogada[i][j])  
-                    tabuleiro[i][j] = 0;
-                else if (i >= 6 && espacoJogada[i][j])  
-                    tabuleiro[i][j] = 1;
-                else
-                    tabuleiro[i][j] = -1;  
-            }
-        }
-    }
-
-    public void mostrarTabuleiro() {
-        System.out.print("     ");
-        for (int i = 0; i < tamanhoLadoTabuleiro; i++)
-            System.out.print((i + 1) + "  ");
-        System.out.println();
-
-        System.out.print("   \u250C");
-        for (int i = 0; i < tamanhoLadoTabuleiro; i++)
-            System.out.print("\u2500\u2500\u2500");
-        System.out.println("\u2510");
-
-        for (int i = 0; i < tamanhoLadoTabuleiro; i++) {
-            System.out.printf("%2d \u2502", i + 1);
-            for (int j = 0; j < tamanhoLadoTabuleiro; j++) {
-                if (tabuleiro[i][j] == 1)
-                    System.out.print("\u001B[31m O \033[0m");
-                else if (tabuleiro[i][j] == 0)
-                    System.out.print("\u001B[34m O \033[0m");
-                else if (espacoJogada[i][j])
-                    System.out.print(" * ");
-                else
-                    System.out.print("   ");
-            }
-            System.out.println("\u2502");
-        }
-
-        System.out.print("   \u2514");
-        for (int i = 0; i < tamanhoLadoTabuleiro; i++)
-            System.out.print("\u2500\u2500\u2500");
-        System.out.println("\u2518");
     }
 
     private boolean estaNosLimites(int x, int y) {
-        return x >= 1 && x <= tamanhoLadoTabuleiro && y >= 1 && y <= tamanhoLadoTabuleiro;
+        return x >= 1 && x <= tabuleiro.getTamanhoTabuleiro() && y >= 1 && y <= tabuleiro.getTamanhoTabuleiro();
     }
 
     public boolean jogadaValida(int posX, int posY, int novaX, int novaY, String jogador) {
         if (!estaNosLimites(posX, posY) || !estaNosLimites(novaX, novaY))
             return false;
 
-        if (!espacoJogada[novaX - 1][novaY - 1])  
+        if (!tabuleiro.getEspacoValido(novaX, novaY))  
             return false;
 
-        int peca = tabuleiro[posX - 1][posY - 1];
+        int peca = tabuleiro.getElemento(posX, posY);
         if (jogador.equals("B") && peca != 1) 
             return false;
         if (jogador.equals("P") && peca != 0)  
             return false;
 
-        if (tabuleiro[novaX - 1][novaY - 1] != -1)
+        if (tabuleiro.getElemento(novaX, novaY) != -1)
             return false;
 
         int dx = novaX - posX;
@@ -99,7 +41,7 @@ public class Jogo {
         if (Math.abs(dx) == 2 && Math.abs(dy) == 2) {
             int meioX = posX + dx / 2;
             int meioY = posY + dy / 2;
-            int pecaMeio = tabuleiro[meioX - 1][meioY - 1];
+            int pecaMeio = tabuleiro.getElemento(meioX, meioY);
             if (jogador.equals("B") && pecaMeio == 0)
                 return true;
             if (jogador.equals("P") && pecaMeio == 1)
@@ -110,13 +52,13 @@ public class Jogo {
     }
 
     public void mover(int posX, int posY, int novaX, int novaY, String jogador) {
-        tabuleiro[posX - 1][posY - 1] = -1;
+        tabuleiro.setElemento(posX, posY, -1);
 
         if (Math.abs(novaX - posX) == 2 && Math.abs(novaY - posY) == 2) {
             int meioX = (posX + novaX) / 2;
             int meioY = (posY + novaY) / 2;
-            int pecaComida = tabuleiro[meioX - 1][meioY - 1];
-            tabuleiro[meioX - 1][meioY - 1] = -1;
+            int pecaComida = tabuleiro.getElemento(meioX, meioY);
+            tabuleiro.setElemento(meioX, meioY, -1);
 
             if (pecaComida == 0)
                 comidasBrancas++;
@@ -125,9 +67,9 @@ public class Jogo {
         }
 
         if (jogador.equals("B"))
-            tabuleiro[novaX - 1][novaY - 1] = 1;
+            tabuleiro.setElemento(novaX, novaY, 1);
         else
-            tabuleiro[novaX - 1][novaY - 1] = 0;
+            tabuleiro.setElemento(novaX, novaY, 0);
     }
 
     public int verificarEstadoJogo() {
@@ -148,6 +90,10 @@ public class Jogo {
         } catch (Exception e) {
             System.out.println("\n\n\n\n\n\n\n\n\n\n");
         }
+    }
+
+    public void mostrarTabuleiro(){
+        tabuleiro.mostrarTabuleiro();
     }
 
 }
