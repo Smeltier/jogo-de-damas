@@ -1,3 +1,4 @@
+package damas;
 public class Tabuleiro {
     
     private final int tamanhoLadoTabuleiro = 8;
