@@ -83,5 +83,4 @@ public class Tabuleiro {
     public boolean getEspacoValido(int x, int y){
         return espacoJogada[x - 1][y - 1];
     }
-
 }

@@ -16,7 +16,7 @@ public class Main {
             int posicaoAtualX, posicaoAtualY, novaPosicaoX, novaPosicaoY;
 
             while (true) {
-                System.out.println("Digite: linhaAtual colunaAtual novaLinha novaColuna");
+                System.out.println("Digite: Linha Atual - Coluna Atual - Nova Linha - Nova Coluna");
                 posicaoAtualX = scanner.nextInt();
                 posicaoAtualY = scanner.nextInt();
                 novaPosicaoX = scanner.nextInt();
