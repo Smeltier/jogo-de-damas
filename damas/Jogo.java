@@ -1,4 +1,3 @@
-package damas;
 public class Jogo {
 
     private Tabuleiro tabuleiro;
